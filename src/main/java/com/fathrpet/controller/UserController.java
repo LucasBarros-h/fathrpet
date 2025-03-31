@@ -1,29 +1,32 @@
 package com.fathrpet.controller;
 
 import com.fathrpet.model.entity.User;
-import com.fathrpet.service.ServiceUser;
+import com.fathrpet.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private final ServiceUser userService;
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-
-        return ResponseEntity.ok(userService.addUser(user));
+    public User createUser(@RequestBody User user){
+        return userService.createUser(user);
     }
 
     @GetMapping
-    public String ola(){
-        return "Ola";
+    public List<User> getAllUsers(){
+        return userService.getAllUser();
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
 }
