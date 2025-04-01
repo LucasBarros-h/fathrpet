@@ -60,6 +60,5 @@ public class MarketplaceService {
         userRepository.save(buyer);
 
         return pokemonRepository.save(boughtPokemon);
-
     }
 }
