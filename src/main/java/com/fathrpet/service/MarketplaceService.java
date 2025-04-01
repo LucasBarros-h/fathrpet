@@ -39,6 +39,9 @@ public class MarketplaceService {
         listing.setSeller(seller);
         listing.setCreatedListingAt(LocalDateTime.now());
 
+        pokemon.setListPosition(listing);
+        pokemonRepository.save(pokemon);
+
         return marketplaceRepository.save(listing);
     }
 
@@ -61,4 +64,6 @@ public class MarketplaceService {
 
         return pokemonRepository.save(boughtPokemon);
     }
+
+    //TODO IMPLEMENTAR METODO PARA RETIRAR A VENDA DO POKEMON
 }
