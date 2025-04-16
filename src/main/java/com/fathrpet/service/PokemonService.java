@@ -1,5 +1,6 @@
 package com.fathrpet.service;
 
+import com.fathrpet.exception.ResourceNotFoundException;
 import com.fathrpet.model.entity.Pokemon;
 import com.fathrpet.model.entity.User;
 import com.fathrpet.repositories.PokemonRepository;
@@ -21,11 +22,11 @@ public class PokemonService {
 
     @Transactional
     public Pokemon generatePokemon(Long userId) {
-        User owner = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        User owner = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
         List<Pokemon> basePokemons = pokemonRepository.findByIsBaseTrue();
         if(basePokemons.isEmpty()) {
-            throw new IllegalStateException("Não há pokemons base cadastrados no sistema.");
+            throw new ResourceNotFoundException("Não há pokemons base cadastrados no sistema.");
         }
         Pokemon base = basePokemons.get(random.nextInt(basePokemons.size()));
 
@@ -38,6 +39,7 @@ public class PokemonService {
 
     public Pokemon createPokeVariant(Pokemon basePokemon){
         Pokemon pokeVariant = new Pokemon();
+        pokeVariant.setId(null);
         pokeVariant.setName(basePokemon.getName());
         pokeVariant.setType(basePokemon.getType());
         pokeVariant.setBase(false);
@@ -48,10 +50,6 @@ public class PokemonService {
 
     public List<Pokemon> getBasePokemons(){
         return pokemonRepository.findByIsBaseTrue();
-    }
-
-    public List<Pokemon> getUserPokemons(Long userId){
-        return pokemonRepository.findOwnerById(userId);
     }
 
 }

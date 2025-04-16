@@ -1,5 +1,6 @@
 package com.fathrpet.service;
 
+import com.fathrpet.exception.ResourceNotFoundException;
 import com.fathrpet.model.entity.Marketplace;
 import com.fathrpet.model.entity.Pokemon;
 import com.fathrpet.model.entity.User;
@@ -8,9 +9,11 @@ import com.fathrpet.repositories.PokemonRepository;
 import com.fathrpet.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,35 +24,54 @@ public class MarketplaceService {
     private final MarketplaceRepository marketplaceRepository;
     private final UserRepository userRepository;
 
+    public Marketplace findListingById(Long marketplaceId){
+        return marketplaceRepository.findById(marketplaceId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    }
+
+    public List<Marketplace> findAllListings(){
+        return marketplaceRepository.findAll();
+    }
+
+
     @Transactional
-    public Marketplace listPokemon(Long pokemonId, Long sellerId, double price){
-        User seller = userRepository.findById(sellerId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    public Pokemon removeFromListing(Long listingId) {
 
-        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(() -> new RuntimeException("Pokemon não encontrado"));
+            Marketplace listing = marketplaceRepository.findWithPokemonAndSellerById(listingId).orElseThrow(() -> new ResourceNotFoundException("Orderm de venda não encontrada"));
 
-        if(!seller.getInventory().contains(pokemon)){
-            throw new RuntimeException("Pokemon não encontrado na lista do usuário");
-        }
-        seller.getInventory().remove(pokemon);
-        userRepository.save(seller);
+            if(listing.isSold()){
+                throw new ResourceNotFoundException("Não é possível remover uma ordem de venda já removida ou inexistente");
+            }
 
-        Marketplace listing = new Marketplace();
-        listing.setPokemon(pokemon);
-        listing.setPrice(price);
-        listing.setSeller(seller);
-        listing.setCreatedListingAt(LocalDateTime.now());
+            Pokemon pokemon = listing.getPokemon();
+            User seller = listing.getSeller();
 
-        pokemon.setListPosition(listing);
-        pokemonRepository.save(pokemon);
+            if(!pokemon.getOwner().equals(seller)){
+                throw new DataIntegrityViolationException("Inconsistência na propriedade do pokemon");
+            }
 
-        return marketplaceRepository.save(listing);
+            seller.getAllListings().removeIf(id -> id.getId().equals(listingId));
+
+            pokemon.setListed(false);
+            pokemonRepository.save(pokemon);
+
+            if(!seller.getInventory().contains(pokemon)){
+                seller.getInventory().add(pokemon);
+            }
+
+            userRepository.save(seller);
+            marketplaceRepository.deleteByIdCustom(listingId);
+
+            marketplaceRepository.flush();
+
+            return pokemon;
+
     }
 
     @Transactional
     public Pokemon buyPokemon(Long listingId, Long buyerId){
-        Marketplace listing = marketplaceRepository.findById(listingId).orElseThrow(() -> new RuntimeException("Ordem de venda não encontrada"));
+        Marketplace listing = marketplaceRepository.findById(listingId).orElseThrow(() -> new ResourceNotFoundException("Ordem de venda não encontrada"));
 
-        User buyer = userRepository.findById(buyerId).orElseThrow(() -> new RuntimeException("Comprador não encontrado"));
+        User buyer = userRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Comprador não encontrado"));
 
         walletService.transferFunds(buyerId, listing.getSeller().getId(), listing.getPrice());
 
@@ -65,5 +87,4 @@ public class MarketplaceService {
         return pokemonRepository.save(boughtPokemon);
     }
 
-    //TODO IMPLEMENTAR METODO PARA RETIRAR A VENDA DO POKEMON
 }

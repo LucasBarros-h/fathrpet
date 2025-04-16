@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,12 +28,15 @@ public class User {
     @JsonIgnore
     private Wallet userWallet;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Pokemon> inventory;
+    private List<Pokemon> inventory = new ArrayList<>();
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Marketplace> listings;
+    private List<Marketplace> allListings;
+
+    @OneToMany(mappedBy = "userSlot", cascade = CascadeType.ALL)
+    private List<TowerSlot> towerSlots = new ArrayList<>();
 
 }

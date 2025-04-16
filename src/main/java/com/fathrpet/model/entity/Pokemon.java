@@ -1,8 +1,10 @@
 package com.fathrpet.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,11 +23,20 @@ public class Pokemon {
 
     private boolean isBase = false;
 
-    @ManyToOne
+    private int level = 1;
+    private int exp = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User owner;
 
-    @OneToOne(mappedBy = "pokemon")
-    private Marketplace listPosition;
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Marketplace> listings = new ArrayList<>();
+
+    @OneToOne(mappedBy = "pokemonInSlot")
+    private TowerSlot towerSlot;
+
+    private boolean listed;
 
 }

@@ -1,7 +1,9 @@
 package com.fathrpet.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -13,17 +15,20 @@ public class Marketplace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "pokemon_id")
+    @ManyToOne
+    @JoinColumn(name = "pokemon_id", nullable = false)
+    @JsonBackReference
     private Pokemon pokemon;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private User seller;
 
     private double price;
     private LocalDateTime createdListingAt = LocalDateTime.now();
-    private boolean isSold = false;
+    private boolean isSold;
+
+
 }
 
 
