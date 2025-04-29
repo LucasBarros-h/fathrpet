@@ -17,11 +17,10 @@ public class User {
     private Long id;
 
     @Column(name = "username")
-    private String userName;
+    private String username;
     @Column(name = "email")
     private String email;
     @Column(name = "password")
-    @JsonIgnore
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,7 +35,14 @@ public class User {
     @JsonIgnore
     private List<Marketplace> allListings;
 
-    @OneToMany(mappedBy = "userSlot", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TowerSlot> towerSlots = new ArrayList<>();
 
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Tower tower;
+
+    public boolean isDefeated(){
+        return inventory.stream().noneMatch(Pokemon::isAlive);
+    }
 }

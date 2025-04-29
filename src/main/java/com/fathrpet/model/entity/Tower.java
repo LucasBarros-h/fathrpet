@@ -19,4 +19,8 @@ public class Tower {
 
     @OneToMany(mappedBy = "tower", cascade = CascadeType.ALL)
     private List<TowerSlot> slots = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 }

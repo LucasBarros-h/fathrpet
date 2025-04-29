@@ -16,13 +16,15 @@ public class TowerDTO {
     private String name;
     private int capacity;
     List<TowerSlotDTO> slots;
+    private Long ownerId;
 
     public static TowerDTO fromEntity(Tower tower){
         return new TowerDTO(
                 tower.getId(),
                 tower.getName(),
                 tower.getCapacity(),
-                tower.getSlots().stream().map(TowerSlotDTO::fromEntity).toList()
+                tower.getSlots().stream().map(TowerSlotDTO::fromEntity).toList(),
+                tower.getOwner().getId()
         );
     }
 }

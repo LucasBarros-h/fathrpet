@@ -2,10 +2,9 @@ package com.fathrpet.controller;
 
 import com.fathrpet.mappers.MarketplaceMapper;
 import com.fathrpet.mappers.PokemonMapper;
+import com.fathrpet.mappers.TowerMapper;
 import com.fathrpet.mappers.UserMapper;
-import com.fathrpet.model.dto.MarketplaceDTO;
-import com.fathrpet.model.dto.PokemonDTO;
-import com.fathrpet.model.dto.UserDTO;
+import com.fathrpet.model.dto.*;
 import com.fathrpet.model.entity.Marketplace;
 import com.fathrpet.model.entity.Pokemon;
 import com.fathrpet.model.entity.User;
@@ -19,15 +18,15 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/v1")
 public class UserController {
 
     private final UserService userService;
 
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
-        User user = UserMapper.toEntity(userDTO);
+    public ResponseEntity<UserDTO> createUser(@RequestBody CreateUserDTO createUserDTO){
+        User user = UserMapper.toEntity(createUserDTO);
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDTO(createdUser));
     }
@@ -35,6 +34,11 @@ public class UserController {
     @GetMapping
     public List<UserDTO> getAllUsers(){
         return userService.getAllUser().stream().map(UserMapper::toDTO).toList();
+    }
+
+    @GetMapping("/tower/{userId}")
+    public ResponseEntity<TowerDTO> getUserTower(@PathVariable Long userId){
+        return ResponseEntity.ok(TowerMapper.toDTO(userService.getTowerFromId(userId)));
     }
 
     @GetMapping("/{id}")

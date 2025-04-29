@@ -43,8 +43,12 @@ public class PokemonService {
         pokeVariant.setName(basePokemon.getName());
         pokeVariant.setType(basePokemon.getType());
         pokeVariant.setBase(false);
-        pokeVariant.setStats(basePokemon.getStats().stream().map(stat -> stat + random.nextInt(11) - 5).toList());
-
+        pokeVariant.setAttack((random.nextInt(11) - 5) + basePokemon.getAttack());
+        pokeVariant.setDefense((random.nextInt(11) - 5) + basePokemon.getDefense());
+        pokeVariant.setHealth((random.nextInt(11) - 5) + basePokemon.getHealth());
+        pokeVariant.setAbility(basePokemon.getAbility());
+        pokeVariant.setLevel(basePokemon.getLevel());
+        pokeVariant.setExp(basePokemon.getExp());
         return pokeVariant;
     }
 

@@ -3,6 +3,7 @@ package com.fathrpet.mappers;
 import com.fathrpet.model.dto.PokemonDTO;
 import com.fathrpet.model.entity.Pokemon;
 import com.fathrpet.model.entity.User;
+import org.springframework.stereotype.Component;
 
 public class PokemonMapper {
 
@@ -12,7 +13,12 @@ public class PokemonMapper {
         dto.setId(pokemon.getId());
         dto.setName(pokemon.getName());
         dto.setType(pokemon.getType());
-        dto.setStats(pokemon.getStats());
+        dto.setAttack(pokemon.getAttack());
+        dto.setDefense(pokemon.getDefense());
+        dto.setHealth(pokemon.getHealth());
+        dto.setAbility(pokemon.getAbility());
+        dto.setLevel(pokemon.getLevel());
+        dto.setExp(pokemon.getExp());
         dto.setBase(pokemon.isBase());
         dto.setListed(pokemon.isListed());
         dto.setOwnerId(pokemon.getOwner() != null ? pokemon.getOwner().getId() : null);
@@ -25,7 +31,12 @@ public class PokemonMapper {
         pokemon.setId(dto.getId());
         pokemon.setName(dto.getName());
         pokemon.setType(dto.getType());
-        pokemon.setStats(dto.getStats());
+        pokemon.setAttack(dto.getAttack());
+        pokemon.setDefense(dto.getDefense());
+        pokemon.setHealth(dto.getHealth());
+        pokemon.setAbility(dto.getAbility());
+        pokemon.setLevel(dto.getLevel());
+        pokemon.setExp(dto.getExp());
         pokemon.setBase(dto.isBase());
         pokemon.setListed(dto.isListed());
         pokemon.setOwner(owner); // precisa analisar gepeto mandou colocar somente dt.setOwnerId()

@@ -1,0 +1,6 @@
+CREATE TABLE wallet (
+    id BIGSERIAL PRIMARY KEY,
+    balance DECIMAL(19,2) DEFAULT 0.00,
+    user_id BIGINT UNIQUE NOT NULL,
+    CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE
+);

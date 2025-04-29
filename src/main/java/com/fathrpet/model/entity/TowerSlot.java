@@ -19,11 +19,11 @@ public class TowerSlot {
 
     @OneToOne
     @JoinColumn(name = "pokemon_id")
-    private Pokemon pokemonInSlot;
+    private Pokemon pokemon;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userSlot;
+    private User user;
 
     private LocalDateTime entryTime;
     private LocalDateTime minimumExitTime;

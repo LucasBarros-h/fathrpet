@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/pokemon")
+@RequestMapping("/api/pokemon/v1")
 public class PokemonController {
 
     private final PokemonService pokemonService;

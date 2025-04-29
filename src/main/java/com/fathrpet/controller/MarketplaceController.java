@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/marketplace/v1")
 public class MarketplaceController {
 
     private final MarketplaceService marketplaceService;

@@ -27,8 +27,8 @@ public class TowerSlotDTO {
         return new TowerSlotDTO(
                 slot.getId(),
                 slot.getTower().getId(),
-                PokemonDTO.fromEntity(slot.getPokemonInSlot()),
-                UserDTO.fromEntity(slot.getUserSlot()),
+                PokemonDTO.fromEntity(slot.getPokemon()),
+                UserDTO.fromEntity(slot.getUser()),
                 slot.getEntryTime(),
                 slot.getMinimumExitTime(),
                 slot.isWithdrawn(),

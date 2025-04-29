@@ -1,0 +1,8 @@
+CREATE TABLE tower (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL DEFAULT 5,
+    owner_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_tower_user FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE
+);

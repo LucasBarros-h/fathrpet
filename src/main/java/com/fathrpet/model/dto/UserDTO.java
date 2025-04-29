@@ -12,13 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDTO {
     private Long id;
-    private String userName;
+    private String username;
     private String email;
+
 
     public static UserDTO fromEntity(User user){
         return new UserDTO(
                 user.getId(),
-                user.getUserName(),
+                user.getUsername(),
                 user.getEmail()
         );
     }
